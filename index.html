@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Trustless AI Model Bounties – PVC (Demo)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #131a33;
+      --muted: #9fb0d0;
+      --text: #eaf1ff;
+      --accent: #6cf0b6;
+      --warn: #ffb86b;
+      --danger: #ff6b6b;
+      --ok: #3ddc97;
+      --code: #0d1226;
+      --border: #243055;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      margin: 0;
+      background: radial-gradient(1200px 600px at 20% -10%, #1a2450 0%, #0b1020 50%, #0b1020 100%);
+      color: var(--text);
+    }
+    header {
+      padding: 24px 16px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0));
+      position: sticky; top: 0; backdrop-filter: blur(6px);
+      z-index: 10;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 16px 64px; }
+    h1 { margin: 0; font-size: 22px; letter-spacing: 0.2px; }
+    h2 { margin: 24px 0 10px; font-size: 18px; }
+    p { color: var(--muted); line-height: 1.5; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .panel h3 { margin-top: 0; }
+    .muted { color: var(--muted); font-size: 14px; }
+    input, select, button, textarea {
+      background: #0f1430;
+      border: 1px solid #1f2b57;
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 8px;
+      width: 100%;
+      outline: none;
+    }
+    textarea { min-height: 80px; resize: vertical; }
+    label { font-size: 13px; color: var(--muted); display: block; margin-bottom: 6px; }
+    .row { display: grid; grid-template-columns: repeat(12, 1fr); gap: 10px; }
+    .col-3 { grid-column: span 3; }
+    .col-4 { grid-column: span 4; }
+    .col-6 { grid-column: span 6; }
+    .col-8 { grid-column: span 8; }
+    .col-12 { grid-column: span 12; }
+    .btn {
+      background: linear-gradient(180deg, #2b7d5d, #1a5a45);
+      border: 1px solid #3ca378;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform .02s ease-in-out, filter .15s;
+    }
+    .btn:hover { filter: brightness(1.05); }
+    .btn:active { transform: translateY(1px); }
+    .btn.secondary {
+      background: #172045;
+      border-color: #2e3c73;
+    }
+    .tag { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #152046; border: 1px solid #2a3a77; font-size: 12px; color: #cfe1ff; }
+    .ok { color: var(--ok); }
+    .danger { color: var(--danger); }
+    .warn { color: var(--warn); }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .code {
+      background: var(--code);
+      border: 1px solid var(--border);
+      padding: 10px;
+      border-radius: 8px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      color: #cfe1ff;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 8px 6px; border-bottom: 1px solid #1b254a; font-size: 14px; }
+    th { text-align: left; color: #bcd0f5; }
+    .right { text-align: right; }
+    .flex { display: flex; align-items: center; gap: 8px; }
+    .space { height: 8px; }
+    .hr { height: 1px; background: var(--border); margin: 12px 0; }
+    .explain { font-size: 13px; color: #cfdaf9; background: #0f1738; border: 1px solid #283570; padding: 8px 10px; border-radius: 8px; }
+    .pill { padding: 3px 8px; border-radius: 999px; border: 1px solid #304080; background: #121a3b; font-size: 12px; }
+    .footer { margin-top: 32px; font-size: 12px; color: #97a9cc; }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+      .row { grid-template-columns: 1fr; }
+      .col-3, .col-4, .col-6, .col-8, .col-12 { grid-column: span 1; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Trustless AI Model Bounties – PVC (Demo)</h1>
+      <p class="muted">A local-only interactive walkthrough of the on-chain/off-chain flow using a toy commitment. Not connected to Ethereum.</p>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <div class="panel">
+      <h3>What you’ll see</h3>
+      <ul class="muted">
+        <li>Create a contest with a stablecoin pool.</li>
+        <li>Submit 3-number models with randomness <span class="mono">r</span> and error rate.</li>
+        <li>Leaderboard shows lowest-error models.</li>
+        <li>Off-chain aggregation: compute weighted sum and average using 1/(error+eps).</li>
+        <li>PVC check (toy): Commit(Wsum, Rsum) == Σ weight_i · C_i.</li>
+        <li>Proportional payouts from the pool.</li>
+      </ul>
+      <div class="explain">
+        Cryptography note: This demo uses a toy, homomorphic “commitment” mod a large prime to illustrate the math and UX. In production, use BN254 Pedersen vector commitments on Ethereum and verify on-chain with elliptic curve precompiles.
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="panel">
+        <h3>1) Create Contest</h3>
+        <div class="row">
+          <div class="col-6">
+            <label>Contest name</label>
+            <input id="contestName" placeholder="e.g. Logistic Regression Challenge" />
+          </div>
+          <div class="col-6">
+            <label>Dataset / metric</label>
+            <input id="contestMeta" placeholder="e.g. IPFS CID: ... / error rate (bps)" />
+          </div>
+          <div class="col-4">
+            <label>Stablecoin pool (units)</label>
+            <input id="poolAmount" type="number" min="1" value="10000" />
+          </div>
+          <div class="col-4">
+            <label>Epsilon (bps)</label>
+            <input id="epsBps" type="number" min="1" value="1" />
+          </div>
+          <div class="col-4">
+            <label>Weight base</label>
+            <input id="weightBase" type="number" min="1" value="1000000000000" />
+          </div>
+          <div class="col-12">
+            <button class="btn" onclick="createContest()">Create Contest</button>
+            <button class="btn secondary" onclick="addSamples()">Add sample submissions</button>
+          </div>
+        </div>
+        <div class="space"></div>
+        <div id="contestInfo" class="muted"></div>
+      </div>
+
+      <div class="panel">
+        <h3>2) Submit Model (3-vector + r + error)</h3>
+        <div class="row">
+          <div class="col-6">
+            <label>Participant (name or address)</label>
+            <input id="pName" placeholder="0xabc... or alice" />
+          </div>
+          <div class="col-6">
+            <label>Model URI (optional)</label>
+            <input id="pUri" placeholder="ipfs://..." />
+          </div>
+          <div class="col-3">
+            <label>w0 (int)</label>
+            <input id="w0" type="number" value="12" />
+          </div>
+          <div class="col-3">
+            <label>w1 (int)</label>
+            <input id="w1" type="number" value="-7" />
+          </div>
+          <div class="col-3">
+            <label>w2 (int)</label>
+            <input id="w2" type="number" value="3" />
+          </div>
+          <div class="col-3">
+            <label>r (uint)</label>
+            <input id="rval" type="number" value="123456789" />
+          </div>
+          <div class="col-6">
+            <label>Error (bps)</label>
+            <input id="errorBps" type="number" min="0" value="1500" />
+          </div>
+          <div class="col-6">
+            <label>&nbsp;</label>
+            <button class="btn" onclick="submitModel()">Submit</button>
+          </div>
+        </div>
+        <div class="space"></div>
+        <div class="explain">
+          Commitment (toy): C = (r·H + w0·G0 + w1·G1 + w2·G2) mod P. This preserves linearity so Σ a_i·C_i = Commit(Σ a_i·w_i, Σ a_i·r_i).
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>3) Leaderboard (lowest error first)</h3>
+      <div id="leaderboard"></div>
+    </div>
+
+    <div class="grid">
+      <div class="panel">
+        <h3>4) Aggregate (off-chain) and Verify (on-chain)</h3>
+        <p class="muted">Weights are num_i = WEIGHT_BASE / (error_i + eps).</p>
+        <div class="row">
+          <div class="col-6">
+            <label>Aggregated model URI (optional)</label>
+            <input id="aggUri" placeholder="ipfs://final-model.json" />
+          </div>
+          <div class="col-6">
+            <label>&nbsp;</label>
+            <button class="btn" onclick="aggregateAndVerify()">Aggregate & Verify</button>
+          </div>
+        </div>
+        <div class="space"></div>
+        <div id="aggResult"></div>
+      </div>
+
+      <div class="panel">
+        <h3>5) Export Proof Artifact (JSON)</h3>
+        <p class="muted">This JSON captures the inputs/outputs so anyone can re-verify the aggregated commitment check and payout math.</p>
+        <div class="flex">
+          <button class="btn secondary" onclick="exportArtifact()">Download JSON</button>
+          <span id="exportHint" class="muted"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      Demo-only cryptography: The commitment here is a simple linear function mod a prime to illustrate homomorphism. Replace with BN254 Pedersen vector commitments when wiring to your smart contract.
+    </div>
+
+  </div>
+
+  <script>
+    // -----------------------------
+    // Toy homomorphic commitment
+    // -----------------------------
+    // Field modulus (BN254 Fr) for convenience
+    const P = BigInt("21888242871839275222246405745257275088548364400416034343698204186575808495617");
+    // Fixed "generators" as BigInt scalars (toy!)
+    const H  = BigInt("17293822569102704641"); // arbitrary < P
+    const G0 = BigInt("3138551040899898973");
+    const G1 = BigInt("6277101735386680763");
+    const G2 = BigInt("957809713041180536473966891968943239761"); // random-ish < P
+
+    const state = {
+      contest: null,
+      submissions: [], // {id, name, uri, w:[w0,w1,w2], r, errorBps, C (BigInt)}
+      finalized: false,
+      agg: null // {Wsum:[], Rsum, nums:[], sumNum, CsumOk, payouts:[]}
+    };
+
+    function toField(x) {
+      // Map JS number/int string to BigInt in [0, P)
+      let b = BigInt(x);
+      b = b % P;
+      if (b < 0) b += P;
+      return b;
+    }
+
+    function commitToy(w, r) {
+      // C = r*H + w0*G0 + w1*G1 + w2*G2 mod P
+      const rH = (toField(r) * H) % P;
+      const t0 = (toField(w[0]) * G0) % P;
+      const t1 = (toField(w[1]) * G1) % P;
+      const t2 = (toField(w[2]) * G2) % P;
+      return (((rH + t0) % P + t1) % P + t2) % P;
+    }
+
+    function weightNumerator(errorBps, epsBps, weightBase) {
+      const denom = BigInt(errorBps) + BigInt(epsBps || 0);
+      const d = denom === 0n ? 1n : denom;
+      return BigInt(weightBase) / d; // integer division
+    }
+
+    function createContest() {
+      const name = document.getElementById('contestName').value || 'Demo Contest';
+      const meta = document.getElementById('contestMeta').value || 'Error rate (bps)';
+      const poolAmount = BigInt(document.getElementById('poolAmount').value || '10000');
+      const epsBps = Number(document.getElementById('epsBps').value || '1');
+      const weightBase = BigInt(document.getElementById('weightBase').value || '1000000000000');
+
+      state.contest = { name, meta, poolAmount, epsBps, weightBase };
+      state.submissions = [];
+      state.finalized = false;
+      state.agg = null;
+      renderContest();
+      renderLeaderboard();
+      document.getElementById('aggResult').innerHTML = '';
+      document.getElementById('exportHint').textContent = '';
+    }
+
+    function renderContest() {
+      if (!state.contest) {
+        document.getElementById('contestInfo').innerHTML = '<span class="warn">No contest yet. Create one above.</span>';
+        return;
+      }
+      const c = state.contest;
+      const html = `
+        <div><span class="pill">Contest</span> <strong>${escapeHtml(c.name)}</strong></div>
+        <div class="muted">Meta: ${escapeHtml(c.meta)}</div>
+        <div class="muted">Pool: <span class="mono">${c.poolAmount.toString()}</span> | eps (bps): <span class="mono">${c.epsBps}</span> | WEIGHT_BASE: <span class="mono">${c.weightBase.toString()}</span></div>
+        <div class="muted">Toy prime P: <span class="mono">${P.toString()}</span></div>
+        <div class="muted">Generators (toy): H=${H}, G0=${G0}, G1=${G1}, G2=${G2}</div>
+      `;
+      document.getElementById('contestInfo').innerHTML = html;
+    }
+
+    function submitModel() {
+      if (!state.contest) {
+        alert('Create a contest first.');
+        return;
+      }
+      const name = (document.getElementById('pName').value || '').trim();
+      const uri = (document.getElementById('pUri').value || '').trim();
+      const w0 = Number(document.getElementById('w0').value || '0');
+      const w1 = Number(document.getElementById('w1').value || '0');
+      const w2 = Number(document.getElementById('w2').value || '0');
+      const r = BigInt(document.getElementById('rval').value || '0');
+      const errorBps = Number(document.getElementById('errorBps').value || '0');
+
+      const w = [w0, w1, w2];
+      const C = commitToy(w, r);
+      const id = state.submissions.length + 1;
+
+      state.submissions.push({ id, name: name || `user${id}`, uri, w, r, errorBps, C });
+      renderLeaderboard();
+
+      // Clear some inputs for convenience
+      document.getElementById('pName').value = '';
+      document.getElementById('pUri').value = '';
+    }
+
+    function renderLeaderboard() {
+      const el = document.getElementById('leaderboard');
+      if (!state.contest || state.submissions.length === 0) {
+        el.innerHTML = '<div class="muted">No submissions yet.</div>';
+        return;
+      }
+      const sorted = [...state.submissions].sort((a, b) => a.errorBps - b.errorBps);
+      let rows = sorted.map(s => `
+        <tr>
+          <td>#${s.id}</td>
+          <td>${escapeHtml(s.name)}</td>
+          <td class="mono">${s.w[0]}, ${s.w[1]}, ${s.w[2]}</td>
+          <td class="mono">${s.r.toString()}</td>
+          <td class="mono">${"0x" + s.C.toString(16).slice(0,10)}…</td>
+          <td class="right mono">${s.errorBps}</td>
+          <td>${s.uri ? `<a href="${escapeAttr(s.uri)}" target="_blank">link</a>` : '-'}</td>
+        </tr>
+      `).join('');
+
+      el.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th><th>Participant</th><th>Vector w</th><th>r</th><th>Commit (toy)</th><th class="right">Error (bps)</th><th>URI</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
+    function aggregateAndVerify() {
+      if (!state.contest || state.submissions.length === 0) {
+        alert('Create a contest and add submissions first.');
+        return;
+      }
+
+      const c = state.contest;
+      const Wsum = [0n, 0n, 0n]; // field sums for commitment
+      const Rsum = { v: 0n };
+      const nums = [];
+      let sumNum = 0n;
+
+      for (const s of state.submissions) {
+        const num = weightNumerator(s.errorBps, c.epsBps, c.weightBase);
+        nums.push(Number(num)); // keep numeric copy for display
+        sumNum += num;
+
+        // Wsum field contribution
+        Wsum[0] = (Wsum[0] + (num * toField(s.w[0])) % P) % P;
+        Wsum[1] = (Wsum[1] + (num * toField(s.w[1])) % P) % P;
+        Wsum[2] = (Wsum[2] + (num * toField(s.w[2])) % P) % P;
+        Rsum.v = (Rsum.v + (num * toField(s.r)) % P) % P;
+      }
+      if (sumNum === 0n) {
+        alert('Sum of weights is zero. Adjust eps or errors.');
+        return;
+      }
+
+      // Commitment check: Commit(Wsum,Rsum) ?= Σ num_i * C_i
+      const lhs = commitToy([Wsum[0], Wsum[1], Wsum[2]], Rsum.v);
+      let rhs = 0n;
+      for (let i = 0; i < state.submissions.length; i++) {
+        const s = state.submissions[i];
+        const num = BigInt(nums[i]);
+        rhs = (rhs + (num * s.C) % P) % P;
+      }
+      const ok = lhs === rhs;
+
+      // Average (off-chain presentation)
+      const sumNumF = Number(sumNum); // display only; beware large arrays
+      const wAvg = [
+        Number(bigDivFloor(Wsum[0], sumNum)),
+        Number(bigDivFloor(Wsum[1], sumNum)),
+        Number(bigDivFloor(Wsum[2], sumNum))
+      ];
+
+      // Payouts proportional to num_i / sumNum
+      const payouts = state.submissions.map((s, i) => {
+        const num = BigInt(nums[i]);
+        const amt = (c.poolAmount * num) / sumNum; // integer division
+        return { id: s.id, name: s.name, amount: amt };
+      });
+
+      state.agg = {
+        Wsum, Rsum: Rsum.v, nums, sumNum, CsumOk: ok, lhs, rhs, wAvg, payouts,
+        aggUri: document.getElementById('aggUri').value || ''
+      };
+
+      renderAgg();
+    }
+
+    function renderAgg() {
+      const a = state.agg;
+      if (!a) return;
+
+      const proofOk = a.CsumOk
+        ? `<span class="ok">PVC check passed</span>`
+        : `<span class="danger">PVC check failed</span>`;
+      const numsList = state.submissions.map((s, i) => `#${s.id} (${escapeHtml(s.name)}): ${a.nums[i]}`).join(', ');
+
+      const payoutsRows = a.payouts.map(p =>
+        `<tr><td>#${p.id}</td><td>${escapeHtml(p.name)}</td><td class="right mono">${p.amount.toString()}</td></tr>`
+      ).join('');
+
+      const html = `
+        <div class="explain">
+          Check: Commit(Wsum, Rsum) == Σ num_i · C_i → ${proofOk}
+        </div>
+        <div class="hr"></div>
+        <div class="row">
+          <div class="col-6">
+            <div class="muted">Weights (num_i): ${numsList}</div>
+            <div class="muted">Σ num_i = <span class="mono">${a.sumNum.toString()}</span></div>
+          </div>
+          <div class="col-6">
+            <div>Wsum (mod P): <span class="mono">[${a.Wsum[0].toString()}, ${a.Wsum[1].toString()}, ${a.Wsum[2].toString()}]</span></div>
+            <div>Rsum (mod P): <span class="mono">${a.Rsum.toString()}</span></div>
+          </div>
+        </div>
+        <div class="space"></div>
+        <div>
+          <span class="tag">Aggregated average (display-only)</span>
+          <div class="muted">Wavg ≈ <span class="mono">[${a.wAvg[0]}, ${a.wAvg[1]}, ${a.wAvg[2]}]</span> (computed as Wsum / Σ num_i)</div>
+        </div>
+        <div class="space"></div>
+        <div>
+          <span class="tag">Payouts</span>
+          <table>
+            <thead><tr><th>ID</th><th>Participant</th><th class="right">Amount</th></tr></thead>
+            <tbody>${payoutsRows}</tbody>
+          </table>
+        </div>
+        <div class="space"></div>
+        <div class="code mono">
+Artifact preview:
+{
+  "ciphersuite": "Toy-Linear-Commitment-v0 (demo only)",
+  "primeP": "${P.toString()}",
+  "generators": {"H":"${H.toString()}","G0":"${G0.toString()}","G1":"${G1.toString()}","G2":"${G2.toString()}"},
+  "contest": {"name":"${escapeJson(state.contest.name)}","meta":"${escapeJson(state.contest.meta)}","pool":"${state.contest.poolAmount.toString()}","epsBps":${state.contest.epsBps},"weightBase":"${state.contest.weightBase.toString()}"},
+  "submissions": [${state.submissions.map(s => `{"id":${s.id},"name":"${escapeJson(s.name)}","w":[${s.w.join(",")}],"r":"${s.r.toString()}","errorBps":${s.errorBps},"C":"${s.C.toString()}","uri":"${escapeJson(s.uri || "")}"}`).join(", ")}],
+  "aggregation": {
+    "Wsum":["${a.Wsum[0].toString()}","${a.Wsum[1].toString()}","${a.Wsum[2].toString()}"],
+    "Rsum":"${a.Rsum.toString()}",
+    "nums":[${a.nums.join(",")}],
+    "sumNum":"${a.sumNum.toString()}",
+    "lhs":"${a.lhs.toString()}",
+    "rhs":"${a.rhs.toString()}",
+    "ok": ${a.CsumOk ? "true" : "false"},
+    "avg":["${a.wAvg[0]}","${a.wAvg[1]}","${a.wAvg[2]}"],
+    "aggregatedModelUri":"${escapeJson(a.aggUri)}"
+  }
+}
+        </div>
+      `;
+      document.getElementById('aggResult').innerHTML = html;
+      document.getElementById('exportHint').textContent = 'Ready to export.';
+    }
+
+    function exportArtifact() {
+      if (!state.agg) {
+        alert('Run Aggregate & Verify first.');
+        return;
+      }
+      const a = state.agg;
+      const artifact = {
+        ciphersuite: "Toy-Linear-Commitment-v0 (demo only)",
+        primeP: P.toString(),
+        generators: { H: H.toString(), G0: G0.toString(), G1: G1.toString(), G2: G2.toString() },
+        contest: {
+          name: state.contest.name,
+          meta: state.contest.meta,
+          pool: state.contest.poolAmount.toString(),
+          epsBps: state.contest.epsBps,
+          weightBase: state.contest.weightBase.toString(),
+        },
+        submissions: state.submissions.map(s => ({
+          id: s.id, name: s.name, w: s.w, r: s.r.toString(), errorBps: s.errorBps, C: s.C.toString(), uri: s.uri || ""
+        })),
+        aggregation: {
+          Wsum: a.Wsum.map(x => x.toString()),
+          Rsum: a.Rsum.toString(),
+          nums: a.nums,
+          sumNum: a.sumNum.toString(),
+          lhs: a.lhs.toString(),
+          rhs: a.rhs.toString(),
+          ok: a.CsumOk,
+          avg: a.wAvg,
+          aggregatedModelUri: a.aggUri
+        }
+      };
+      const blob = new Blob([JSON.stringify(artifact, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const aEl = document.createElement('a');
+      aEl.href = url;
+      aEl.download = 'pvc_demo_artifact.json';
+      aEl.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function addSamples() {
+      if (!state.contest) {
+        createContest();
+      }
+      const samples = [
+        { name: 'alice', w: [12, -7, 3],  r: 123456789n, errorBps: 1500 },
+        { name: 'bob',   w: [-4, 5, 9],   r: 222222222n, errorBps: 800  },
+        { name: 'cara',  w: [1, 2, -3],   r: 999999999n, errorBps: 5000 },
+        { name: 'dave',  w: [7, -2, 10],  r: 55555555n,  errorBps: 1200 },
+      ];
+      for (const s of samples) {
+        const C = commitToy(s.w, s.r);
+        const id = state.submissions.length + 1;
+        state.submissions.push({ id, name: s.name, uri: '', w: s.w, r: s.r, errorBps: s.errorBps, C });
+      }
+      renderLeaderboard();
+    }
+
+    // Helpers
+    function bigDivFloor(a, b) {
+      // floor(a / b) with BigInt
+      return a / b;
+    }
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+    function escapeAttr(s) { return escapeHtml(s); }
+    function escapeJson(s) {
+      return String(s).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    }
+
+    // Initialize with a default contest
+    createContest();
+  </script>
+</body>
+</html>
