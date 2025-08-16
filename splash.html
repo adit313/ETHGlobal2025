@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Trustless AI Model Bounties – Splash</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Trustless AI Model Bounties: Cryptographic incentives for open-source AI using Pedersen Vector Commitments (PVC) and proportional payouts." />
+  <style>
+    :root {
+      --bg: #0b1020;
+      --grad1: #1a2450;
+      --grad2: #0b1020;
+      --text: #eaf1ff;
+      --muted: #a8b6d9;
+      --accent: #6cf0b6;
+      --accent2: #7fb4ff;
+      --border: #26325c;
+      --panel: #121939;
+      --chip: #10183b;
+      --chipBorder: #2c3a74;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: radial-gradient(1200px 700px at 20% -10%, var(--grad1) 0%, var(--bg) 60%, var(--bg) 100%);
+    }
+    a { color: inherit; text-decoration: none; }
+    header {
+      padding: 28px 16px 10px;
+      position: sticky; top: 0; z-index: 10;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,14,30,0.55); backdrop-filter: blur(6px);
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+    .logo { font-weight: 800; letter-spacing: 0.3px; }
+    .tag { display: inline-block; font-size: 12px; padding: 3px 8px; border: 1px solid #2e3c73; background: #0f1640; border-radius: 999px; color: #cfe1ff; }
+    .muted { color: var(--muted); }
+    .hero { padding: 48px 0 24px; }
+    .hero h1 { margin: 0; font-size: 40px; line-height: 1.15; }
+    .hero p { margin: 12px 0 0; font-size: 18px; color: var(--muted); }
+    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 18px; border-radius: 10px; border: 1px solid #3ca378;
+      background: linear-gradient(180deg, #2b7d5d, #1a5a45);
+      color: #ffffff; font-weight: 700; cursor: pointer;
+      transition: transform .02s ease-in-out, filter .15s;
+    }
+    .btn.secondary { border-color: #2a3a77; background: #18235a; }
+    .btn:hover { filter: brightness(1.05); }
+    .btn:active { transform: translateY(1px); }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+    .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.00));
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+    h2 { margin: 6px 0 10px; font-size: 22px; }
+    h3 { margin: 8px 0; font-size: 16px; }
+    ul { margin: 10px 0 0 18px; color: var(--muted); }
+    .pill { display: inline-block; padding: 3px 8px; border: 1px solid var(--chipBorder); background: var(--chip); border-radius: 999px; font-size: 12px; margin-right: 6px; }
+    .steps { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 12px; }
+    .step { background: #0f1430; border: 1px solid #253064; padding: 12px; border-radius: 10px; }
+    .badge { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: #142261; color: #cfe1ff; border: 1px solid #2a3a77; font-weight: 700; margin-right: 8px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .callout {
+      border-left: 3px solid var(--accent2);
+      background: #0f1738;
+      border: 1px solid #283570;
+      border-left-width: 4px;
+      padding: 12px 12px;
+      border-radius: 10px;
+      color: #cfdaf9;
+    }
+    .footer { margin: 34px 0 50px; color: var(--muted); font-size: 12px; }
+    .check { color: var(--accent); font-weight: 700; }
+    .x { color: #ff6b6b; font-weight: 700; }
+    .divider { height: 1px; background: var(--border); margin: 20px 0; }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+        <div class="logo">Trustless AI Model Bounties</div>
+        <a class="btn secondary" href="index.html">Enter Demo →</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- Hero -->
+    <section class="hero">
+      <span class="tag">Hackathon Prototype</span>
+      <h1>Funding open‑source AI with cryptographic proofs of contribution</h1>
+      <p>There’s no sustainable way to fund community AI models, development is costly, and it’s hard to prove who really contributed. We use Pedersen Vector Commitments (PVC) to make model validation, blending, and payouts verifiable.</p>
+      <div class="cta-row">
+        <a class="btn" href="index.html">Try the Interactive Demo</a>
+        <a class="btn secondary" href="#how-it-works">How it Works</a>
+      </div>
+    </section>
+
+    <!-- Problems -->
+    <section class="grid">
+      <div class="panel">
+        <h2>What’s broken today</h2>
+        <ul>
+          <li><span class="x">✕</span> No good funding mechanisms for open‑source AI — small teams bear the cost without upside.</li>
+          <li><span class="x">✕</span> High costs to develop, train, and evaluate models — bounties exist, but trust is manual.</li>
+          <li><span class="x">✕</span> No way to prove model validation or attribute value to people helping with inference — contributions are invisible.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h2>What we’re proposing</h2>
+        <ul>
+          <li><span class="check">✓</span> On‑chain contests funded with stablecoins.</li>
+          <li><span class="check">✓</span> Off‑chain model training; submit a PVC commitment instead of raw weights.</li>
+          <li><span class="check">✓</span> Deterministic scoring → weights for aggregation and payout.</li>
+          <li><span class="check">✓</span> Homomorphic PVC check proves the blended model used the stated proportions.</li>
+          <li><span class="check">✓</span> Payouts split proportionally to verified contribution — no trusted coordinator.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Why PVC -->
+    <section class="panel" style="margin-top:16px;">
+      <h2>Why PVC (Pedersen Vector Commitments)?</h2>
+      <div class="callout">
+        PVCs commit to a vector of model weights with strong properties:
+        <ul>
+          <li><b>Binding</b>: after submission, weights can’t be changed.</li>
+          <li><b>Hiding</b>: weights stay secret until reveal (or never revealed, if only proofs are needed).</li>
+          <li><b>Homomorphic</b>: a weighted sum of commitments equals a commitment to the weighted‑sum model — the key to provable blending and fair payouts.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="how-it-works" class="panel" style="margin-top:16px;">
+      <h2>How it works</h2>
+      <div class="steps">
+        <div class="step">
+          <div><span class="badge">1</span><b>Create contest</b></div>
+          <p class="muted">Post a dataset (IPFS) and goal metric. Fund a stablecoin pool.</p>
+          <p class="mono">Contest(name, datasetCID, goalError)</p>
+        </div>
+        <div class="step">
+          <div><span class="badge">2</span><b>Submit models (PVC)</b></div>
+          <p class="muted">Participants train off‑chain and submit a commitment Cᵢ and error eᵢ. No raw weights revealed.</p>
+          <p class="mono">Cᵢ = rᵢ·H + Σ wᵢ[j]·Gⱼ</p>
+        </div>
+        <div class="step">
+          <div><span class="badge">3</span><b>Blend & verify</b></div>
+          <p class="muted">Compute weighted sums off‑chain; verify on‑chain the PVC equality that proves the blend proportions.</p>
+          <p class="mono">Commit(W_sum, R_sum) == Σ αᵢ · Cᵢ</p>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <p class="muted"><b>Proportional payouts</b>: Use the same αᵢ to split the pool <span class="mono">pᵢ = Pool × αᵢ / Σα</span>. Because the equality holds, payouts match the exact blending proportions.</p>
+    </section>
+
+    <!-- Who benefits -->
+    <section class="grid" style="margin-top:16px;">
+      <div class="panel">
+        <h2>Who benefits?</h2>
+        <h3>Open‑source builders</h3>
+        <p class="muted">Monetize contributions without giving up IP; receive verifiable, proportional rewards.</p>
+        <h3>Companies & researchers</h3>
+        <p class="muted">Run fair, auditable contests. Blend top submissions and pay automatically, with public proofs.</p>
+        <h3>Community validators</h3>
+        <p class="muted">Extend the mechanism to evaluation or inference helpers with PVC/zk proofs for transparent attribution.</p>
+      </div>
+      <div class="panel">
+        <h2>Roadmap</h2>
+        <ul>
+          <li><b>Today</b>: Commit–reveal with PVC, off‑chain federated averaging, on‑chain homomorphic check, proportional payouts.</li>
+          <li><b>Next</b>: ZK validation of accuracy without revealing models; Merkle commitments for large vectors.</li>
+          <li><b>Future</b>: Proof‑of‑inference attribution — reward nodes that verifiably contribute inference work.</li>
+        </ul>
+        <div class="cta-row" style="margin-top:14px;">
+          <a class="btn" href="index.html">Enter Demo →</a>
+          <a class="btn secondary" href="#faq">FAQ</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="panel" style="margin-top:16px;">
+      <h2>FAQ</h2>
+      <h3>What problem does this actually solve?</h3>
+      <p class="muted">Open‑source AI lacks sustainable incentives. By turning model improvement into cryptographically verifiable contributions, you can fund progress while keeping evaluation and payouts transparent.</p>
+
+      <h3>Is the model public?</h3>
+      <p class="muted">Commitments are public; raw weights can stay private until winners are selected or forever if only the blended commitment is needed. The homomorphic check ensures integrity regardless.</p>
+
+      <h3>How are payouts determined?</h3>
+      <p class="muted">Scores (e.g., error rate) deterministically map to weights αᵢ. The same weights are used for the blended model and to split the pool — cryptographic equality ties them together.</p>
+
+      <h3>What runs on-chain?</h3>
+      <p class="muted">Contest creation, commitment storage, and a single homomorphic equality check for the blended result. Training and evaluation remain off‑chain.</p>
+    </section>
+
+    <section style="text-align:center; margin: 26px 0;">
+      <a class="btn" href="index.html">Enter the Interactive Demo</a>
+      <div class="muted" style="margin-top:8px;">No wallet required in the demo. The on‑chain version uses BN254 precompiles.</div>
+    </section>
+
+    <div class="footer">
+      Note: The interactive demo uses a toy, linear commitment to illustrate the UX and math. The on‑chain implementation uses BN254 Pedersen vector commitments to ensure binding, hiding, and homomorphic verification.
+    </div>
+  </main>
+</body>
+</html>
