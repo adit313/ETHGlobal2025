@@ -2,373 +2,312 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Trustless AI Model Bounties – PVC (Demo)</title>
+  <title>Trustless AI Model Bounties – PVC Demo (3-vector)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
       --bg: #0b1020;
-      --panel: #131a33;
-      --muted: #9fb0d0;
+      --panel: #121939;
+      --muted: #a8b6d9;
       --text: #eaf1ff;
       --accent: #6cf0b6;
       --warn: #ffb86b;
       --danger: #ff6b6b;
-      --ok: #3ddc97;
-      --code: #0d1226;
-      --border: #243055;
+      --ok: #35e0a1;
+      --border: #26325c;
+      --code: #0e1430;
     }
     * { box-sizing: border-box; }
     body {
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
       margin: 0;
-      background: radial-gradient(1200px 600px at 20% -10%, #1a2450 0%, #0b1020 50%, #0b1020 100%);
+      background: radial-gradient(1300px 700px at 20% -10%, #1a2450 0%, #0b1020 60%, #0b1020 100%);
       color: var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
     }
-    header {
-      padding: 24px 16px;
-      border-bottom: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0));
-      position: sticky; top: 0; backdrop-filter: blur(6px);
-      z-index: 10;
-    }
+    header { padding: 20px 16px; border-bottom: 1px solid var(--border); position: sticky; top: 0; backdrop-filter: blur(6px); background: rgba(10,14,30,0.6); z-index: 10; }
     .container { max-width: 1100px; margin: 0 auto; padding: 0 16px 64px; }
-    h1 { margin: 0; font-size: 22px; letter-spacing: 0.2px; }
-    h2 { margin: 24px 0 10px; font-size: 18px; }
-    p { color: var(--muted); line-height: 1.5; }
+    h1 { margin: 0; font-size: 22px; }
+    h2 { margin: 18px 0 8px; font-size: 18px; }
+    h3 { margin: 6px 0 8px; font-size: 16px; }
+    p, .muted { color: var(--muted); }
     .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .panel {
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-    }
-    .panel h3 { margin-top: 0; }
-    .muted { color: var(--muted); font-size: 14px; }
-    input, select, button, textarea {
-      background: #0f1430;
-      border: 1px solid #1f2b57;
-      color: var(--text);
-      padding: 10px 12px;
-      border-radius: 8px;
-      width: 100%;
-      outline: none;
-    }
-    textarea { min-height: 80px; resize: vertical; }
-    label { font-size: 13px; color: var(--muted); display: block; margin-bottom: 6px; }
+    .panel { background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.0)); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
     .row { display: grid; grid-template-columns: repeat(12, 1fr); gap: 10px; }
-    .col-3 { grid-column: span 3; }
-    .col-4 { grid-column: span 4; }
-    .col-6 { grid-column: span 6; }
-    .col-8 { grid-column: span 8; }
-    .col-12 { grid-column: span 12; }
-    .btn {
-      background: linear-gradient(180deg, #2b7d5d, #1a5a45);
-      border: 1px solid #3ca378;
-      cursor: pointer;
-      font-weight: 600;
-      transition: transform .02s ease-in-out, filter .15s;
-    }
-    .btn:hover { filter: brightness(1.05); }
-    .btn:active { transform: translateY(1px); }
-    .btn.secondary {
-      background: #172045;
-      border-color: #2e3c73;
-    }
-    .tag { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #152046; border: 1px solid #2a3a77; font-size: 12px; color: #cfe1ff; }
-    .ok { color: var(--ok); }
-    .danger { color: var(--danger); }
-    .warn { color: var(--warn); }
+    .col-3 { grid-column: span 3; } .col-4 { grid-column: span 4; } .col-6 { grid-column: span 6; } .col-8 { grid-column: span 8; } .col-12 { grid-column: span 12; }
+    input, button { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #1f2b57; background: #0f1430; color: var(--text); outline: none; }
+    label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 6px; }
+    .btn { background: linear-gradient(180deg, #2b7d5d, #1a5a45); border: 1px solid #3ca378; cursor: pointer; font-weight: 600; }
+    .btn.secondary { background: #192359; border-color: #2a3a77; }
+    .btn.warn { background: #5a3a1a; border-color: #a36d3c; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .pill { display: inline-block; padding: 3px 8px; border: 1px solid #304080; background: #10183b; border-radius: 999px; font-size: 12px; }
+    .tag { padding: 2px 8px; border: 1px solid #2a3a77; background: #121a3b; border-radius: 999px; font-size: 12px; display: inline-block; }
+    .ok { color: var(--ok); } .danger { color: var(--danger); } .warn { color: var(--warn); }
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
-    .code {
-      background: var(--code);
-      border: 1px solid var(--border);
-      padding: 10px;
-      border-radius: 8px;
-      overflow-x: auto;
-      white-space: pre-wrap;
-      color: #cfe1ff;
-    }
     table { width: 100%; border-collapse: collapse; }
     th, td { padding: 8px 6px; border-bottom: 1px solid #1b254a; font-size: 14px; }
-    th { text-align: left; color: #bcd0f5; }
+    th { text-align: left; color: #cfe1ff; }
     .right { text-align: right; }
-    .flex { display: flex; align-items: center; gap: 8px; }
-    .space { height: 8px; }
     .hr { height: 1px; background: var(--border); margin: 12px 0; }
-    .explain { font-size: 13px; color: #cfdaf9; background: #0f1738; border: 1px solid #283570; padding: 8px 10px; border-radius: 8px; }
-    .pill { padding: 3px 8px; border-radius: 999px; border: 1px solid #304080; background: #121a3b; font-size: 12px; }
-    .footer { margin-top: 32px; font-size: 12px; color: #97a9cc; }
-    @media (max-width: 900px) {
-      .grid { grid-template-columns: 1fr; }
-      .row { grid-template-columns: 1fr; }
-      .col-3, .col-4, .col-6, .col-8, .col-12 { grid-column: span 1; }
-    }
+    .code { background: var(--code); border: 1px solid var(--border); padding: 10px; border-radius: 8px; overflow-x: auto; white-space: pre; color: #d8e4ff; }
+    .topbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .linkish { color: #b8cbff; cursor: pointer; text-decoration: underline; }
+    .footer { margin-top: 24px; font-size: 12px; color: #9fb0d0; }
+
+    /* Modal */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 999; }
+    .modal { width: min(820px, 92vw); max-height: 90vh; overflow: auto; background: #101736; border: 1px solid #2a3a77; border-radius: 12px; padding: 16px; }
+    .modal h3 { margin-top: 0; }
+    .closebtn { float: right; cursor: pointer; font-weight: 700; color: #cfdaf9; }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } .row { grid-template-columns: 1fr; } .col-3, .col-4, .col-6, .col-8, .col-12 { grid-column: span 1; } }
   </style>
 </head>
 <body>
   <header>
     <div class="container">
-      <h1>Trustless AI Model Bounties – PVC (Demo)</h1>
-      <p class="muted">A local-only interactive walkthrough of the on-chain/off-chain flow using a toy commitment. Not connected to Ethereum.</p>
+      <div class="topbar">
+        <h1>Trustless AI Model Bounties – PVC (Demo)</h1>
+        <span class="pill">Local-only UI (no blockchain)</span>
+        <span class="linkish" onclick="openModal()">How does the PVC prove blending?</span>
+      </div>
+      <p class="muted">This demo walks through your exact 5-step flow with a toy homomorphic commitment. In production, swap in BN254 Pedersen vector commitments and your smart contract calls.</p>
     </div>
   </header>
 
   <div class="container">
 
+    <!-- Step 1 -->
     <div class="panel">
-      <h3>What you’ll see</h3>
-      <ul class="muted">
-        <li>Create a contest with a stablecoin pool.</li>
-        <li>Submit 3-number models with randomness <span class="mono">r</span> and error rate.</li>
-        <li>Leaderboard shows lowest-error models.</li>
-        <li>Off-chain aggregation: compute weighted sum and average using 1/(error+eps).</li>
-        <li>PVC check (toy): Commit(Wsum, Rsum) == Σ weight_i · C_i.</li>
-        <li>Proportional payouts from the pool.</li>
-      </ul>
-      <div class="explain">
-        Cryptography note: This demo uses a toy, homomorphic “commitment” mod a large prime to illustrate the math and UX. In production, use BN254 Pedersen vector commitments on Ethereum and verify on-chain with elliptic curve precompiles.
+      <h2>1) Create a contest</h2>
+      <p class="muted">Provide only: Contest name, IPFS dataset, and a goal error rate (bps). Pool is fixed at 10,000 units for the demo.</p>
+      <div class="row">
+        <div class="col-6">
+          <label>Contest name</label>
+          <input id="contestName" placeholder="e.g. MNIST Classifier Challenge" />
+        </div>
+        <div class="col-6">
+          <label>IPFS dataset (CID or URL)</label>
+          <input id="datasetCid" placeholder="ipfs://..." />
+        </div>
+        <div class="col-6">
+          <label>Goal error rate (bps)</label>
+          <input id="goalBps" type="number" min="0" value="1000" />
+        </div>
+        <div class="col-6">
+          <label>&nbsp;</label>
+          <button class="btn" onclick="createContest()">Create Contest</button>
+        </div>
+      </div>
+      <div class="hr"></div>
+      <div id="contestInfo" class="muted"></div>
+    </div>
+
+    <!-- Step 2 and 3 -->
+    <div class="grid">
+      <div class="panel">
+        <h2>2) Show dummy submissions</h2>
+        <p class="muted">Click to populate a few sample models. Each submission has a 3-number vector, randomness r, error (bps), and a toy PVC commitment.</p>
+        <button class="btn secondary" onclick="addDummy()">Add dummy submissions</button>
+        <div class="hr"></div>
+        <h3>Manual add (optional)</h3>
+        <div class="row">
+          <div class="col-4"><label>Participant</label><input id="pName" placeholder="alice" /></div>
+          <div class="col-4"><label>Vector w (comma-separated)</label><input id="pVec" placeholder="12,-7,3" /></div>
+          <div class="col-4"><label>r (uint)</label><input id="pR" type="number" value="123456789" /></div>
+          <div class="col-4"><label>Error (bps)</label><input id="pErr" type="number" value="1500" /></div>
+          <div class="col-8"><label>Model URI (optional)</label><input id="pUri" placeholder="ipfs://..." /></div>
+          <div class="col-4"><label>&nbsp;</label><button class="btn" onclick="addManual()">Add submission</button></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>3) See all submissions</h2>
+        <p class="muted">Sorted by lowest error. Weight used in aggregation is num_i = 1 / (error_i + 1), integer division, so lower error gets higher weight.</p>
+        <div id="subsTable"></div>
       </div>
     </div>
 
+    <!-- Step 4 and 5 -->
     <div class="grid">
       <div class="panel">
-        <h3>1) Create Contest</h3>
+        <h2>4) Federated average + PVC proof</h2>
+        <p class="muted">Compute Wsum, Rsum, verify Commit(Wsum, Rsum) == Σ num_i · C_i, and show the averaged model.</p>
         <div class="row">
-          <div class="col-6">
-            <label>Contest name</label>
-            <input id="contestName" placeholder="e.g. Logistic Regression Challenge" />
-          </div>
-          <div class="col-6">
-            <label>Dataset / metric</label>
-            <input id="contestMeta" placeholder="e.g. IPFS CID: ... / error rate (bps)" />
-          </div>
-          <div class="col-4">
-            <label>Stablecoin pool (units)</label>
-            <input id="poolAmount" type="number" min="1" value="10000" />
-          </div>
-          <div class="col-4">
-            <label>Epsilon (bps)</label>
-            <input id="epsBps" type="number" min="1" value="1" />
-          </div>
-          <div class="col-4">
-            <label>Weight base</label>
-            <input id="weightBase" type="number" min="1" value="1000000000000" />
-          </div>
-          <div class="col-12">
-            <button class="btn" onclick="createContest()">Create Contest</button>
-            <button class="btn secondary" onclick="addSamples()">Add sample submissions</button>
-          </div>
+          <div class="col-8"><label>Aggregated model URI (optional)</label><input id="aggUri" placeholder="ipfs://final-model.json" /></div>
+          <div class="col-4"><label>&nbsp;</label><button class="btn" onclick="aggregate()">Generate PVC proof</button></div>
         </div>
-        <div class="space"></div>
-        <div id="contestInfo" class="muted"></div>
+        <div class="hr"></div>
+        <div id="aggOut"></div>
       </div>
 
       <div class="panel">
-        <h3>2) Submit Model (3-vector + r + error)</h3>
-        <div class="row">
-          <div class="col-6">
-            <label>Participant (name or address)</label>
-            <input id="pName" placeholder="0xabc... or alice" />
-          </div>
-          <div class="col-6">
-            <label>Model URI (optional)</label>
-            <input id="pUri" placeholder="ipfs://..." />
-          </div>
-          <div class="col-3">
-            <label>w0 (int)</label>
-            <input id="w0" type="number" value="12" />
-          </div>
-          <div class="col-3">
-            <label>w1 (int)</label>
-            <input id="w1" type="number" value="-7" />
-          </div>
-          <div class="col-3">
-            <label>w2 (int)</label>
-            <input id="w2" type="number" value="3" />
-          </div>
-          <div class="col-3">
-            <label>r (uint)</label>
-            <input id="rval" type="number" value="123456789" />
-          </div>
-          <div class="col-6">
-            <label>Error (bps)</label>
-            <input id="errorBps" type="number" min="0" value="1500" />
-          </div>
-          <div class="col-6">
-            <label>&nbsp;</label>
-            <button class="btn" onclick="submitModel()">Submit</button>
-          </div>
-        </div>
-        <div class="space"></div>
-        <div class="explain">
-          Commitment (toy): C = (r·H + w0·G0 + w1·G1 + w2·G2) mod P. This preserves linearity so Σ a_i·C_i = Commit(Σ a_i·w_i, Σ a_i·r_i).
-        </div>
+        <h2>5) Payout</h2>
+        <p class="muted">Split the pool proportionally by num_i / Σ num_i. Requires a valid PVC aggregation first.</p>
+        <button class="btn warn" onclick="payout()">Payout</button>
+        <div class="hr"></div>
+        <div id="payoutOut"></div>
       </div>
     </div>
 
     <div class="panel">
-      <h3>3) Leaderboard (lowest error first)</h3>
-      <div id="leaderboard"></div>
-    </div>
-
-    <div class="grid">
-      <div class="panel">
-        <h3>4) Aggregate (off-chain) and Verify (on-chain)</h3>
-        <p class="muted">Weights are num_i = WEIGHT_BASE / (error_i + eps).</p>
-        <div class="row">
-          <div class="col-6">
-            <label>Aggregated model URI (optional)</label>
-            <input id="aggUri" placeholder="ipfs://final-model.json" />
-          </div>
-          <div class="col-6">
-            <label>&nbsp;</label>
-            <button class="btn" onclick="aggregateAndVerify()">Aggregate & Verify</button>
-          </div>
-        </div>
-        <div class="space"></div>
-        <div id="aggResult"></div>
-      </div>
-
-      <div class="panel">
-        <h3>5) Export Proof Artifact (JSON)</h3>
-        <p class="muted">This JSON captures the inputs/outputs so anyone can re-verify the aggregated commitment check and payout math.</p>
-        <div class="flex">
-          <button class="btn secondary" onclick="exportArtifact()">Download JSON</button>
-          <span id="exportHint" class="muted"></span>
-        </div>
-      </div>
+      <h3>Export proof artifact</h3>
+      <p class="muted">Download a JSON containing submissions, weights, aggregated commitment, and the pass/fail check.</p>
+      <button class="btn secondary" onclick="downloadArtifact()">Download JSON</button>
+      <div class="hr"></div>
+      <div id="artifactPreview" class="code mono" style="display:none;"></div>
     </div>
 
     <div class="footer">
-      Demo-only cryptography: The commitment here is a simple linear function mod a prime to illustrate homomorphism. Replace with BN254 Pedersen vector commitments when wiring to your smart contract.
+      Cryptography note: This uses a toy linear commitment mod a prime to illustrate homomorphism. Replace with BN254 Pedersen vector commitments and your contract for a real demo.
     </div>
+  </div>
 
+  <!-- Modal: How PVC proves blending -->
+  <div id="modalBackdrop" class="modal-backdrop">
+    <div class="modal">
+      <span class="closebtn" onclick="closeModal()">✕</span>
+      <h3>How PVC proves the blended proportions</h3>
+      <p class="muted">
+        Each participant commits to their model vector w_i = [w_i[0], w_i[1], w_i[2]] with randomness r_i using a Pedersen vector commitment:
+      </p>
+      <div class="code mono">
+C_i = r_i · H + w_i[0] · G_0 + w_i[1] · G_1 + w_i[2] · G_2
+      </div>
+      <p class="muted">
+        Suppose the payout weights are α_i (derived deterministically from error rates). Pedersen commitments are homomorphic:
+      </p>
+      <div class="code mono">
+Σ α_i · C_i = (Σ α_i · r_i) · H + (Σ α_i · w_i[0]) · G_0 + (Σ α_i · w_i[1]) · G_1 + (Σ α_i · w_i[2]) · G_2
+      </div>
+      <p class="muted">
+        If the aggregator publishes W_sum = Σ α_i · w_i and R_sum = Σ α_i · r_i, anyone can recompute Commit(W_sum, R_sum) and check it equals Σ α_i · C_i. That proves the final (blended) model was derived exactly from the committed inputs with the stated proportions α_i. We then use the same α_i to split the funds proportionally.
+      </p>
+      <p class="muted">
+        In this UI, α_i are integers num_i = 1 / (error_i + 1). For presentation, you can also show the arithmetic average W_avg = W_sum / Σ num_i.
+      </p>
+    </div>
   </div>
 
   <script>
     // -----------------------------
     // Toy homomorphic commitment
+    // C = r*H + w0*G0 + w1*G1 + w2*G2 (mod P)
     // -----------------------------
-    // Field modulus (BN254 Fr) for convenience
-    const P = BigInt("21888242871839275222246405745257275088548364400416034343698204186575808495617");
-    // Fixed "generators" as BigInt scalars (toy!)
-    const H  = BigInt("17293822569102704641"); // arbitrary < P
-    const G0 = BigInt("3138551040899898973");
-    const G1 = BigInt("6277101735386680763");
-    const G2 = BigInt("957809713041180536473966891968943239761"); // random-ish < P
+    const P  = BigInt("21888242871839275222246405745257275088548364400416034343698204186575808495617");
+    const H  = 17293822569102704641n;
+    const G0 = 3138551040899898973n;
+    const G1 = 6277101735386680763n;
+    const G2 = 957809713041180536473966891968943239761n;
 
     const state = {
-      contest: null,
-      submissions: [], // {id, name, uri, w:[w0,w1,w2], r, errorBps, C (BigInt)}
-      finalized: false,
-      agg: null // {Wsum:[], Rsum, nums:[], sumNum, CsumOk, payouts:[]}
+      contest: null, // {name, datasetCid, goalBps, pool}
+      subs: [],      // array of {id, name, w:[n,n,n], r, err, C}
+      agg: null,     // {Wsum:[b,b,b], Rsum:b, nums:[n], sumNum:b, ok:bool, lhs:b, rhs:b, avg:[n,n,n]}
+      paid: false
     };
 
     function toField(x) {
-      // Map JS number/int string to BigInt in [0, P)
       let b = BigInt(x);
-      b = b % P;
-      if (b < 0) b += P;
+      b %= P; if (b < 0) b += P;
       return b;
     }
 
     function commitToy(w, r) {
-      // C = r*H + w0*G0 + w1*G1 + w2*G2 mod P
-      const rH = (toField(r) * H) % P;
-      const t0 = (toField(w[0]) * G0) % P;
-      const t1 = (toField(w[1]) * G1) % P;
-      const t2 = (toField(w[2]) * G2) % P;
-      return (((rH + t0) % P + t1) % P + t2) % P;
+      return (((toField(r)*H % P + toField(w[0])*G0 % P) % P + toField(w[1])*G1 % P) % P + toField(w[2])*G2 % P) % P;
     }
 
-    function weightNumerator(errorBps, epsBps, weightBase) {
-      const denom = BigInt(errorBps) + BigInt(epsBps || 0);
-      const d = denom === 0n ? 1n : denom;
-      return BigInt(weightBase) / d; // integer division
+    function weightNumerator(errBps) {
+      const denom = BigInt(errBps) + 1n; // eps = 1
+      return 1000000000000n / denom;     // WEIGHT_BASE = 1e12
     }
 
+    // Step 1
     function createContest() {
-      const name = document.getElementById('contestName').value || 'Demo Contest';
-      const meta = document.getElementById('contestMeta').value || 'Error rate (bps)';
-      const poolAmount = BigInt(document.getElementById('poolAmount').value || '10000');
-      const epsBps = Number(document.getElementById('epsBps').value || '1');
-      const weightBase = BigInt(document.getElementById('weightBase').value || '1000000000000');
+      const name = (document.getElementById('contestName').value || 'Demo Contest').trim();
+      const datasetCid = (document.getElementById('datasetCid').value || 'ipfs://example').trim();
+      const goalBps = Number(document.getElementById('goalBps').value || '1000');
 
-      state.contest = { name, meta, poolAmount, epsBps, weightBase };
-      state.submissions = [];
-      state.finalized = false;
+      state.contest = { name, datasetCid, goalBps, pool: 10000n };
+      state.subs = [];
       state.agg = null;
-      renderContest();
-      renderLeaderboard();
-      document.getElementById('aggResult').innerHTML = '';
-      document.getElementById('exportHint').textContent = '';
-    }
+      state.paid = false;
 
-    function renderContest() {
-      if (!state.contest) {
-        document.getElementById('contestInfo').innerHTML = '<span class="warn">No contest yet. Create one above.</span>';
-        return;
-      }
-      const c = state.contest;
-      const html = `
-        <div><span class="pill">Contest</span> <strong>${escapeHtml(c.name)}</strong></div>
-        <div class="muted">Meta: ${escapeHtml(c.meta)}</div>
-        <div class="muted">Pool: <span class="mono">${c.poolAmount.toString()}</span> | eps (bps): <span class="mono">${c.epsBps}</span> | WEIGHT_BASE: <span class="mono">${c.weightBase.toString()}</span></div>
-        <div class="muted">Toy prime P: <span class="mono">${P.toString()}</span></div>
-        <div class="muted">Generators (toy): H=${H}, G0=${G0}, G1=${G1}, G2=${G2}</div>
+      document.getElementById('contestInfo').innerHTML = `
+        <div><span class="pill">Contest</span> <strong>${escapeHtml(name)}</strong></div>
+        <div class="muted">Dataset: <span class="mono">${escapeHtml(datasetCid)}</span> | Goal error: <span class="mono">${goalBps} bps</span> | Pool: <span class="mono">${state.contest.pool.toString()}</span></div>
+        <div class="muted">Weight rule: num_i = 1 / (error_i + 1); payout ∝ num_i / Σ num_i</div>
       `;
-      document.getElementById('contestInfo').innerHTML = html;
+      renderSubs();
+      document.getElementById('aggOut').innerHTML = '';
+      document.getElementById('payoutOut').innerHTML = '';
+      document.getElementById('artifactPreview').style.display = 'none';
     }
 
-    function submitModel() {
-      if (!state.contest) {
-        alert('Create a contest first.');
-        return;
+    // Step 2
+    function addDummy() {
+      ensureContest();
+      const names = ['alice', 'bob', 'cara', 'dave', 'eva'];
+      for (let i = 0; i < names.length; i++) {
+        const w = [
+          randInt(-10, 12),
+          randInt(-10, 12),
+          randInt(-10, 12)
+        ];
+        const r = randBig(1n, 10n**12n);
+        const err = randInt(400, 6000); // bps
+        pushSubmission(names[i], w, r, err, '');
       }
-      const name = (document.getElementById('pName').value || '').trim();
+      renderSubs();
+    }
+
+    function addManual() {
+      ensureContest();
+      const name = (document.getElementById('pName').value || `user${state.subs.length+1}`).trim();
+      const vecStr = (document.getElementById('pVec').value || '0,0,0').trim();
+      const parts = vecStr.split(',').map(s => Number(s.trim()));
+      if (parts.length !== 3 || parts.some(x => Number.isNaN(x))) { alert('Vector must be three comma-separated integers.'); return; }
+      const r = BigInt(document.getElementById('pR').value || '0');
+      const err = Number(document.getElementById('pErr').value || '1000');
       const uri = (document.getElementById('pUri').value || '').trim();
-      const w0 = Number(document.getElementById('w0').value || '0');
-      const w1 = Number(document.getElementById('w1').value || '0');
-      const w2 = Number(document.getElementById('w2').value || '0');
-      const r = BigInt(document.getElementById('rval').value || '0');
-      const errorBps = Number(document.getElementById('errorBps').value || '0');
-
-      const w = [w0, w1, w2];
-      const C = commitToy(w, r);
-      const id = state.submissions.length + 1;
-
-      state.submissions.push({ id, name: name || `user${id}`, uri, w, r, errorBps, C });
-      renderLeaderboard();
-
-      // Clear some inputs for convenience
-      document.getElementById('pName').value = '';
-      document.getElementById('pUri').value = '';
+      pushSubmission(name, parts, r, err, uri);
+      renderSubs();
     }
 
-    function renderLeaderboard() {
-      const el = document.getElementById('leaderboard');
-      if (!state.contest || state.submissions.length === 0) {
-        el.innerHTML = '<div class="muted">No submissions yet.</div>';
-        return;
-      }
-      const sorted = [...state.submissions].sort((a, b) => a.errorBps - b.errorBps);
-      let rows = sorted.map(s => `
-        <tr>
-          <td>#${s.id}</td>
-          <td>${escapeHtml(s.name)}</td>
-          <td class="mono">${s.w[0]}, ${s.w[1]}, ${s.w[2]}</td>
-          <td class="mono">${s.r.toString()}</td>
-          <td class="mono">${"0x" + s.C.toString(16).slice(0,10)}…</td>
-          <td class="right mono">${s.errorBps}</td>
-          <td>${s.uri ? `<a href="${escapeAttr(s.uri)}" target="_blank">link</a>` : '-'}</td>
-        </tr>
-      `).join('');
+    function pushSubmission(name, w, r, err, uri) {
+      const id = state.subs.length + 1;
+      const C = commitToy(w, r);
+      state.subs.push({ id, name, w, r, err, uri, C });
+    }
+
+    // Step 3
+    function renderSubs() {
+      const el = document.getElementById('subsTable');
+      if (!state.contest) { el.innerHTML = '<span class="warn">Create a contest first.</span>'; return; }
+      if (state.subs.length === 0) { el.innerHTML = '<span class="muted">No submissions yet. Add dummy submissions.</span>'; return; }
+
+      const srt = [...state.subs].sort((a,b)=>a.err-b.err);
+      let rows = srt.map(s => {
+        const num = weightNumerator(s.err);
+        const share = state.agg ? Number((num * 10000n) / state.agg.sumNum) / 100 : null;
+        return `
+          <tr>
+            <td>#${s.id}</td>
+            <td>${escapeHtml(s.name)}</td>
+            <td class="mono">${s.w[0]}, ${s.w[1]}, ${s.w[2]}</td>
+            <td class="right mono">${s.r.toString()}</td>
+            <td class="right mono">${s.err}</td>
+            <td class="right mono">${num.toString()}</td>
+            <td class="mono">${"0x"+s.C.toString(16).slice(0,10)}…</td>
+            <td>${s.uri ? `<a href="${escapeAttr(s.uri)}" target="_blank">link</a>` : '-'}</td>
+            <td class="right">${state.agg ? `${share.toFixed(2)}%` : '-'}</td>
+          </tr>`;
+      }).join('');
 
       el.innerHTML = `
         <table>
           <thead>
             <tr>
-              <th>ID</th><th>Participant</th><th>Vector w</th><th>r</th><th>Commit (toy)</th><th class="right">Error (bps)</th><th>URI</th>
+              <th>ID</th><th>Participant</th><th>Vector w</th><th class="right">r</th><th class="right">Error (bps)</th><th class="right">num_i</th><th>Commit (toy)</th><th>URI</th><th class="right">Share</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
@@ -376,208 +315,141 @@
       `;
     }
 
-    function aggregateAndVerify() {
-      if (!state.contest || state.submissions.length === 0) {
-        alert('Create a contest and add submissions first.');
-        return;
-      }
+    // Step 4
+    function aggregate() {
+      ensureContest();
+      if (state.subs.length === 0) { alert('No submissions.'); return; }
 
-      const c = state.contest;
-      const Wsum = [0n, 0n, 0n]; // field sums for commitment
-      const Rsum = { v: 0n };
-      const nums = [];
-      let sumNum = 0n;
-
-      for (const s of state.submissions) {
-        const num = weightNumerator(s.errorBps, c.epsBps, c.weightBase);
-        nums.push(Number(num)); // keep numeric copy for display
+      let Wsum = [0n,0n,0n], Rsum = 0n, nums = [], sumNum = 0n;
+      for (const s of state.subs) {
+        const num = weightNumerator(s.err);
+        nums.push(Number(num));
         sumNum += num;
 
-        // Wsum field contribution
-        Wsum[0] = (Wsum[0] + (num * toField(s.w[0])) % P) % P;
-        Wsum[1] = (Wsum[1] + (num * toField(s.w[1])) % P) % P;
-        Wsum[2] = (Wsum[2] + (num * toField(s.w[2])) % P) % P;
-        Rsum.v = (Rsum.v + (num * toField(s.r)) % P) % P;
+        Wsum[0] = (Wsum[0] + num * toField(s.w[0])) % P;
+        Wsum[1] = (Wsum[1] + num * toField(s.w[1])) % P;
+        Wsum[2] = (Wsum[2] + num * toField(s.w[2])) % P;
+        Rsum    = (Rsum    + num * toField(s.r)) % P;
       }
-      if (sumNum === 0n) {
-        alert('Sum of weights is zero. Adjust eps or errors.');
-        return;
-      }
+      if (sumNum === 0n) { alert('Sum of weights is zero.'); return; }
 
-      // Commitment check: Commit(Wsum,Rsum) ?= Σ num_i * C_i
-      const lhs = commitToy([Wsum[0], Wsum[1], Wsum[2]], Rsum.v);
+      const lhs = commitToy(Wsum, Rsum);
       let rhs = 0n;
-      for (let i = 0; i < state.submissions.length; i++) {
-        const s = state.submissions[i];
-        const num = BigInt(nums[i]);
-        rhs = (rhs + (num * s.C) % P) % P;
+      for (let i=0;i<state.subs.length;i++) {
+        rhs = (rhs + BigInt(nums[i]) * state.subs[i].C) % P;
       }
-      const ok = lhs === rhs;
+      const ok = (lhs === rhs);
 
-      // Average (off-chain presentation)
-      const sumNumF = Number(sumNum); // display only; beware large arrays
-      const wAvg = [
-        Number(bigDivFloor(Wsum[0], sumNum)),
-        Number(bigDivFloor(Wsum[1], sumNum)),
-        Number(bigDivFloor(Wsum[2], sumNum))
-      ];
-
-      // Payouts proportional to num_i / sumNum
-      const payouts = state.submissions.map((s, i) => {
-        const num = BigInt(nums[i]);
-        const amt = (c.poolAmount * num) / sumNum; // integer division
-        return { id: s.id, name: s.name, amount: amt };
-      });
-
-      state.agg = {
-        Wsum, Rsum: Rsum.v, nums, sumNum, CsumOk: ok, lhs, rhs, wAvg, payouts,
-        aggUri: document.getElementById('aggUri').value || ''
-      };
-
+      const avg = [Number(Wsum[0]/sumNum), Number(Wsum[1]/sumNum), Number(Wsum[2]/sumNum)];
+      state.agg = { Wsum, Rsum, nums, sumNum, ok, lhs, rhs, avg, aggUri: (document.getElementById('aggUri').value || '') };
       renderAgg();
+      renderSubs();
+      renderArtifactPreview();
     }
 
     function renderAgg() {
       const a = state.agg;
-      if (!a) return;
-
-      const proofOk = a.CsumOk
-        ? `<span class="ok">PVC check passed</span>`
-        : `<span class="danger">PVC check failed</span>`;
-      const numsList = state.submissions.map((s, i) => `#${s.id} (${escapeHtml(s.name)}): ${a.nums[i]}`).join(', ');
-
-      const payoutsRows = a.payouts.map(p =>
-        `<tr><td>#${p.id}</td><td>${escapeHtml(p.name)}</td><td class="right mono">${p.amount.toString()}</td></tr>`
-      ).join('');
-
+      if (!a) { document.getElementById('aggOut').innerHTML=''; return; }
+      const okText = a.ok ? `<span class="ok">PVC check passed</span>` : `<span class="danger">PVC check failed</span>`;
+      const numsList = state.subs.map((s,i)=>`#${s.id}:${a.nums[i]}`).join(', ');
       const html = `
-        <div class="explain">
-          Check: Commit(Wsum, Rsum) == Σ num_i · C_i → ${proofOk}
-        </div>
+        <div class="tag">Proof</div>
+        <div class="mono">Check: Commit(Wsum, Rsum) == Σ num_i · C_i → ${okText}</div>
         <div class="hr"></div>
-        <div class="row">
-          <div class="col-6">
-            <div class="muted">Weights (num_i): ${numsList}</div>
-            <div class="muted">Σ num_i = <span class="mono">${a.sumNum.toString()}</span></div>
-          </div>
-          <div class="col-6">
-            <div>Wsum (mod P): <span class="mono">[${a.Wsum[0].toString()}, ${a.Wsum[1].toString()}, ${a.Wsum[2].toString()}]</span></div>
-            <div>Rsum (mod P): <span class="mono">${a.Rsum.toString()}</span></div>
-          </div>
-        </div>
-        <div class="space"></div>
-        <div>
-          <span class="tag">Aggregated average (display-only)</span>
-          <div class="muted">Wavg ≈ <span class="mono">[${a.wAvg[0]}, ${a.wAvg[1]}, ${a.wAvg[2]}]</span> (computed as Wsum / Σ num_i)</div>
-        </div>
-        <div class="space"></div>
-        <div>
-          <span class="tag">Payouts</span>
-          <table>
-            <thead><tr><th>ID</th><th>Participant</th><th class="right">Amount</th></tr></thead>
-            <tbody>${payoutsRows}</tbody>
-          </table>
-        </div>
-        <div class="space"></div>
-        <div class="code mono">
-Artifact preview:
-{
-  "ciphersuite": "Toy-Linear-Commitment-v0 (demo only)",
-  "primeP": "${P.toString()}",
-  "generators": {"H":"${H.toString()}","G0":"${G0.toString()}","G1":"${G1.toString()}","G2":"${G2.toString()}"},
-  "contest": {"name":"${escapeJson(state.contest.name)}","meta":"${escapeJson(state.contest.meta)}","pool":"${state.contest.poolAmount.toString()}","epsBps":${state.contest.epsBps},"weightBase":"${state.contest.weightBase.toString()}"},
-  "submissions": [${state.submissions.map(s => `{"id":${s.id},"name":"${escapeJson(s.name)}","w":[${s.w.join(",")}],"r":"${s.r.toString()}","errorBps":${s.errorBps},"C":"${s.C.toString()}","uri":"${escapeJson(s.uri || "")}"}`).join(", ")}],
-  "aggregation": {
-    "Wsum":["${a.Wsum[0].toString()}","${a.Wsum[1].toString()}","${a.Wsum[2].toString()}"],
-    "Rsum":"${a.Rsum.toString()}",
-    "nums":[${a.nums.join(",")}],
-    "sumNum":"${a.sumNum.toString()}",
-    "lhs":"${a.lhs.toString()}",
-    "rhs":"${a.rhs.toString()}",
-    "ok": ${a.CsumOk ? "true" : "false"},
-    "avg":["${a.wAvg[0]}","${a.wAvg[1]}","${a.wAvg[2]}"],
-    "aggregatedModelUri":"${escapeJson(a.aggUri)}"
-  }
-}
-        </div>
+        <div class="mono">Wsum: [${a.Wsum[0]}, ${a.Wsum[1]}, ${a.Wsum[2]}]</div>
+        <div class="mono">Rsum: ${a.Rsum}</div>
+        <div class="mono">Σ num_i = ${a.sumNum.toString()}</div>
+        <div class="mono">nums: ${numsList}</div>
+        <div class="hr"></div>
+        <div><span class="tag">Averaged model (display)</span> <span class="mono">[${a.avg[0]}, ${a.avg[1]}, ${a.avg[2]}]</span></div>
+        ${a.aggUri ? `<div class="muted">Aggregated model URI: <span class="mono">${escapeHtml(a.aggUri)}</span></div>` : ''}
       `;
-      document.getElementById('aggResult').innerHTML = html;
-      document.getElementById('exportHint').textContent = 'Ready to export.';
+      document.getElementById('aggOut').innerHTML = html;
     }
 
-    function exportArtifact() {
-      if (!state.agg) {
-        alert('Run Aggregate & Verify first.');
-        return;
-      }
-      const a = state.agg;
-      const artifact = {
+    // Step 5
+    function payout() {
+      ensureContest();
+      if (!state.agg || !state.agg.ok) { alert('Run aggregation and ensure PVC check passes first.'); return; }
+      if (state.paid) { alert('Already paid.'); return; }
+
+      const pool = state.contest.pool;
+      const payouts = state.subs.map((s,i) => {
+        const num = BigInt(state.agg.nums[i]);
+        const amt = (pool * num) / state.agg.sumNum;
+        return { id: s.id, name: s.name, amount: amt };
+      });
+
+      state.paid = true;
+
+      const rows = payouts.map(p => `<tr><td>#${p.id}</td><td>${escapeHtml(p.name)}</td><td class="right mono">${p.amount.toString()}</td></tr>`).join('');
+      document.getElementById('payoutOut').innerHTML = `
+        <div class="ok">Payouts computed and (simulated) sent.</div>
+        <table><thead><tr><th>ID</th><th>Participant</th><th class="right">Amount</th></tr></thead><tbody>${rows}</tbody></table>
+      `;
+    }
+
+    // Artifact JSON
+    function buildArtifact() {
+      if (!state.contest || !state.agg) return null;
+      return {
         ciphersuite: "Toy-Linear-Commitment-v0 (demo only)",
         primeP: P.toString(),
         generators: { H: H.toString(), G0: G0.toString(), G1: G1.toString(), G2: G2.toString() },
         contest: {
           name: state.contest.name,
-          meta: state.contest.meta,
-          pool: state.contest.poolAmount.toString(),
-          epsBps: state.contest.epsBps,
-          weightBase: state.contest.weightBase.toString(),
+          datasetCid: state.contest.datasetCid,
+          goalBps: state.contest.goalBps,
+          pool: state.contest.pool.toString(),
+          weightRule: "num_i = floor(1e12 / (error_i + 1))"
         },
-        submissions: state.submissions.map(s => ({
-          id: s.id, name: s.name, w: s.w, r: s.r.toString(), errorBps: s.errorBps, C: s.C.toString(), uri: s.uri || ""
+        submissions: state.subs.map(s => ({
+          id: s.id, name: s.name, w: s.w, r: s.r.toString(), errorBps: s.err, C: s.C.toString(), uri: s.uri || ""
         })),
         aggregation: {
-          Wsum: a.Wsum.map(x => x.toString()),
-          Rsum: a.Rsum.toString(),
-          nums: a.nums,
-          sumNum: a.sumNum.toString(),
-          lhs: a.lhs.toString(),
-          rhs: a.rhs.toString(),
-          ok: a.CsumOk,
-          avg: a.wAvg,
-          aggregatedModelUri: a.aggUri
+          nums: state.agg.nums,
+          sumNum: state.agg.sumNum.toString(),
+          Wsum: state.agg.Wsum.map(x => x.toString()),
+          Rsum: state.agg.Rsum.toString(),
+          lhs: state.agg.lhs.toString(),
+          rhs: state.agg.rhs.toString(),
+          ok: state.agg.ok,
+          avg: state.agg.avg,
+          aggregatedModelUri: state.agg.aggUri
         }
       };
-      const blob = new Blob([JSON.stringify(artifact, null, 2)], { type: 'application/json' });
+    }
+
+    function renderArtifactPreview() {
+      const art = buildArtifact();
+      const el = document.getElementById('artifactPreview');
+      if (!art) { el.style.display='none'; return; }
+      el.style.display='block';
+      el.textContent = JSON.stringify(art, null, 2);
+    }
+
+    function downloadArtifact() {
+      const art = buildArtifact();
+      if (!art) { alert('Nothing to export yet. Run aggregation first.'); return; }
+      const blob = new Blob([JSON.stringify(art, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
-      const aEl = document.createElement('a');
-      aEl.href = url;
-      aEl.download = 'pvc_demo_artifact.json';
-      aEl.click();
+      const a = document.createElement('a');
+      a.href = url; a.download = 'pvc_proof_artifact.json'; a.click();
       URL.revokeObjectURL(url);
     }
 
-    function addSamples() {
-      if (!state.contest) {
-        createContest();
-      }
-      const samples = [
-        { name: 'alice', w: [12, -7, 3],  r: 123456789n, errorBps: 1500 },
-        { name: 'bob',   w: [-4, 5, 9],   r: 222222222n, errorBps: 800  },
-        { name: 'cara',  w: [1, 2, -3],   r: 999999999n, errorBps: 5000 },
-        { name: 'dave',  w: [7, -2, 10],  r: 55555555n,  errorBps: 1200 },
-      ];
-      for (const s of samples) {
-        const C = commitToy(s.w, s.r);
-        const id = state.submissions.length + 1;
-        state.submissions.push({ id, name: s.name, uri: '', w: s.w, r: s.r, errorBps: s.errorBps, C });
-      }
-      renderLeaderboard();
-    }
+    // Modal controls
+    function openModal(){ document.getElementById('modalBackdrop').style.display = 'flex'; }
+    function closeModal(){ document.getElementById('modalBackdrop').style.display = 'none'; }
 
-    // Helpers
-    function bigDivFloor(a, b) {
-      // floor(a / b) with BigInt
-      return a / b;
-    }
-    function escapeHtml(s) {
-      return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    }
-    function escapeAttr(s) { return escapeHtml(s); }
-    function escapeJson(s) {
-      return String(s).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
-    }
+    // Utils
+    function ensureContest(){ if (!state.contest) throw alert('Create a contest first.'); }
+    function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+    function randBig(min,max){ const span = max-min+1n; const r = BigInt(Math.floor(Math.random()*1e9)); return min + (r % span); }
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+    function escapeAttr(s){ return escapeHtml(s); }
 
-    // Initialize with a default contest
+    // Bootstrap default contest
     createContest();
   </script>
 </body>
