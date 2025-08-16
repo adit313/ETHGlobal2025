@@ -1,0 +1,158 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "spender",
+						"type": "address"
+					}
+				],
+				"name": "allowance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "who",
+						"type": "address"
+					}
+				],
+				"name": "balanceOf",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
+					}
+				],
+				"name": "transfer",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
+					}
+				],
+				"name": "transferFrom",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/PVCContest.sol": "IERC20"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/BN254.sol": {
+			"keccak256": "0x44f87591fa7b66bfd757215d9c43fd74265ca0ffd54642b5c174c7f4e9b21ccf",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://87d5ce7f2bd540063f53bc930bbfa9ea24709360ce8e57f6e132946cd3a361bf",
+				"dweb:/ipfs/QmTzVBViF7Sr3qbt5YWDLGTYcQVndtQg2E6nZwtx6RHmFp"
+			]
+		},
+		"contracts/PVC3Params.sol": {
+			"keccak256": "0x63030386641f45449c5b456bbf82850dac7abf1739b0df16bfe32cbcf9b54014",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://3253dff4dbef66949dcbca4127fa16f956f701ff1d2bdc4c1e19634540b38546",
+				"dweb:/ipfs/QmSqj2RiRMJrMgqmqCNhNGVZ4Gk9ibCYhtMxa1Uvzn63go"
+			]
+		},
+		"contracts/PVCContest.sol": {
+			"keccak256": "0x89fd97cc41c09907dbd6e0f9b73167c801b8bf4cd6625d4acbb74bfc67112476",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://e6c71e4fc2fd3a83d87caf7ea4a7932b0b45bef558e3da391b1412093db10cb4",
+				"dweb:/ipfs/QmXEYmxZUYVn2FJWA4V5LWxBbHcgG9StnhbeewB97pxAY5"
+			]
+		}
+	},
+	"version": 1
+}
